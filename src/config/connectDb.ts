@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
-import config from "./mongo";
+import config from "./loadConfig";
 import { ConnectOptions } from "mongoose";
 
 export const connect = async function(){
 
     try {
-        await mongoose.connect(config.mongo.url, config.option )
+        await mongoose.connect(config.mongo.url, config.option)
             // {
             //     //useFindAndModify: false,
             //     useNewUrlParser: true,

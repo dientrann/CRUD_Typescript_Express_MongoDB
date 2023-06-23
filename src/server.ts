@@ -4,10 +4,12 @@ import model from './models/model';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import testRoute from './routes/test';
-import config from './config/mongo';
-import ValidationError from './error/ValidationError';
+import config from './config/loadConfig';
 import { errorHandler, errorPath } from './error/errorHandler';
+import { userRoute } from './routes/userRoute';
 import 'express-async-errors';
+import cookieParser from 'cookie-parser';
+
 
 connect();
 
@@ -17,6 +19,14 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.use(cookieParser());
+
+//app.use(express.cookieParser('secret'));
+//app.use(express.cookieSession());
+//app.use(express.session({ secret: 'anything' }));
+//app.use(passport.initialize());
+//app.use(passport.session());
 
 
 app.get('/', async function(req, res, next) {
@@ -29,7 +39,8 @@ app.get('/', async function(req, res, next) {
     }
 });
    
-app.use('/test', testRoute)
+app.use('/test', testRoute);
+app.use('/auth', userRoute);
 
 app.get('/err', (req: Request, res: Response, next: NextFunction) => {
     next(res.status(400).json('err'))
@@ -41,26 +52,6 @@ app.get('/err', (req: Request, res: Response, next: NextFunction) => {
 //     message: string,
 //     code: number,
 // }
-
-// function errorHandler (err: any, req: Request, res: Response, next: NextFunction) {
-//     if (res.headersSent) {
-//       return next(err)
-//     }
-//     console.log('Method:', req.method);
-//     console.log('Data:', req.body);
-//     console.log('Params:', req.params);
-//     console.log('Query:', req.query);
-//     console.log('Error:', err);
-
-//     const messageError = err.message;
-
-//     const error = {
-//         status: 'Error',
-//         error: messageError
-//     }
-//     const status = err.status || 400 ;
-//     return res.status(status).json(error);
-//   }
 
 app.use(errorHandler)
 app.use(errorPath)

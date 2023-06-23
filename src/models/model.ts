@@ -5,7 +5,7 @@ import ITest from '../interfaces/test';
 const testSchema: Schema = new Schema(
     {
         name: String,
-        describe: String
+        describe: String,
     },
     {
         timestamps: true
